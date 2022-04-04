@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -26,16 +25,11 @@
             </div>
           </div>
               <div id="header-image-menu">
-                <img src="{{url_for('static', filename='image.jpg')}}">
+                <img src="{{url_for('static', filename='styles/image.jpg')}}">
                 <center>
                   <h2 id = "image-text">
                     <div class="insert_employee">
                       <a href="{{ url_for('employeeDatabase') }}" class="button" >INSERT EMPLOYEE</a>
-                      <br><br>
-                    </div>
-
-                    <div class="insert_employee">
-                      <a href="{{ url_for('attendanceDatabase') }}" class="button" >ATTENDANCE</a>
                       <br><br>
                     </div>
                         </h2>
