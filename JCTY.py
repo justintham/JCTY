@@ -18,7 +18,7 @@ db_conn = connections.Connection(
 
 )
 output = {}
-table = 'employee'
+#table = 'employee'                                                          #NO IMPORTANT?
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -30,6 +30,14 @@ def home():
 def employeeDatabase():
     return render_template('EmployeeSystem.html')
 
+@app.route("/empDatabase1", methods=['GET', 'POST'])
+def attendanceDatabase():
+    return render_template('AttendanceSystem.html')
+
+@app.route("/empDatabase2", methods=['GET', 'POST'])
+def queryDatabase():
+    return render_template('query.html')
+
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -39,7 +47,7 @@ def AddEmp():
     salary = request.form['salary']
     emp_image_file = request.files['emp_image_file']
 
-    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s)"
+    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s)"             #CHANGE TABLE NAME?
     cursor = db_conn.cursor()
 
     if emp_image_file.filename == "":
@@ -77,7 +85,65 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('OutputEmployeeSystem.html', employee_id = emp_id, name=employee_name, jobrole=job_role,month_salary=salary, number_of_rows=number_of_rows, image_s3_url = object_url)
+    return render_template('OutputEmployeeSystem.html', employee_id = emp_id, name=employee_name, jobrole=job_role,month_salary=salary, number_of_rows=number_of_rows)
+
+
+
+
+@app.route("/addemp1", methods=['POST'])
+def AddEmp1():
+    emp_id = request.form['emp_id']
+    first_name = request.form['first_name']
+    date = request.form['currentDate1']
+    time = request.form['currentTime1']
+ 
+
+    insert_sql = "INSERT INTO attendance VALUES (%s, %s, %s, %s)"             #CHANGE TABLE NAME?
+    cursor = db_conn.cursor()
+
+    cursor.execute(insert_sql, (emp_id, first_name, date, time))
+    db_conn.commit()
+    emp_num = emp_id
+    emp_name = first_name
+    date_now = date
+    timenow = time
+
+    cursor.close()
+
+    print("all modification done...")
+    return render_template('OutputAttendanceSystem.html', name=emp_name, id = emp_num, date_1 = date_now, time_1 =timenow )
+
+@app.route("/queryemp", methods=['POST'])
+def QueryEmp():
+    try:
+        emp_id2 = request.form['emp_id']
+        emp_name2 =''
+        job_role2 =''
+        salary2 =''
+    
+        if emp_id2  == "":
+            return "Please type number"
+
+        query_employee = "SELECT employee_name,job_role,salary FROM employee WHERE emp_id = %s"
+        cursor = db_conn.cursor()
+        cursor.execute(query_employee,(emp_id2))
+        db_conn.commit()
+        # get all records
+        records = cursor.fetchall()
+
+        for row in records:
+ 
+            emp_name2=row[0]
+            job_role2=row[1]
+            salary2=row[2]
+        cursor.close()
+
+    except Exception as e:
+        return str(e)
+
+    print("all modification done...")
+    return render_template('queryOutput.html', id=emp_id2, name = emp_name2, job_role = job_role2,salary =salary2)    
+
 
 
 if __name__ == '__main__':

@@ -25,11 +25,21 @@
             </div>
           </div>
               <div id="header-image-menu">
-                <img src="{{url_for('static', filename='styles/image.jpg')}}">
+                <img height="500" width="2000" src="{{url_for('static', filename='styles/image.jpg')}}">
                 <center>
                   <h2 id = "image-text">
                     <div class="insert_employee">
                       <a href="{{ url_for('employeeDatabase') }}" class="button" >INSERT EMPLOYEE</a>
+                      <br><br>
+                    </div>
+
+                    <div class="insert_employee">
+                      <a href="{{ url_for('attendanceDatabase') }}" class="button" >ATTENDANCE</a>
+                      <br><br>
+                    </div>
+
+                    <div class="insert_employee">
+                      <a href="{{ url_for('queryDatabase') }}" class="button" >QUERY EMPLOYEE DATA</a>
                       <br><br>
                     </div>
                         </h2>
