@@ -3,11 +3,13 @@ from pymysql import connections
 import os
 import boto3
 from config import *
+from botocore.client import Config
 
 app = Flask(__name__,template_folder='templates')
 
 bucket = custombucket
 region = customregion
+cloud_domain = cloudfront
 
 db_conn = connections.Connection(
     host=customhost,
@@ -18,7 +20,7 @@ db_conn = connections.Connection(
 
 )
 output = {}
-#table = 'employee'                                                          #NO IMPORTANT?
+table = 'employee'                                                          #NO IMPORTANT?
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -47,7 +49,7 @@ def AddEmp():
     salary = request.form['salary']
     emp_image_file = request.files['emp_image_file']
 
-    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s)"             #CHANGE TABLE NAME?
+    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s)"
     cursor = db_conn.cursor()
 
     if emp_image_file.filename == "":
@@ -58,13 +60,22 @@ def AddEmp():
         cursor.execute(insert_sql, (emp_id, employee_name, job_role, salary))
         db_conn.commit()
         # Uplaod image file in S3 #
-        emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + "_image_file"
+        emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + ".png"
         s3 = boto3.resource('s3')
         number_of_rows = cursor.execute("SELECT * FROM employee")
+        scientist_count = cursor.execute("SELECT * FROM employee WHERE job_role = 'Data Scientist'")
+        engineering_count = cursor.execute("SELECT *  FROM employee WHERE job_role = 'Software Engineering'")
+        hr_count = cursor.execute("SELECT * FROM employee WHERE job_role = 'Human Resource'")
+        #image_url = "https://"+bucket+".s3.amazonaws.com/"+emp_image_file_name_in_s3
+        image_url = "https://"+cloud_domain+"/"+emp_image_file_name_in_s3
+
 
         try:
             print("Data inserted in MySQL RDS... uploading image to S3...")
             s3.Bucket(custombucket).put_object(Key=emp_image_file_name_in_s3, Body=emp_image_file)
+            s3_object = s3.Object(bucket, emp_image_file_name_in_s3)
+            s3_object.metadata.update({'id':'image/png'})
+            s3_object.copy_from(CopySource={'Bucket':bucket, 'Key':emp_image_file_name_in_s3}, Metadata=s3_object.metadata, MetadataDirective='REPLACE')
             bucket_location = boto3.client('s3').get_bucket_location(Bucket=custombucket)
             s3_location = (bucket_location['LocationConstraint'])
 
@@ -78,6 +89,7 @@ def AddEmp():
                 custombucket,
                 emp_image_file_name_in_s3)
 
+
         except Exception as e:
             return str(e)
 
@@ -85,7 +97,7 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('OutputEmployeeSystem.html', employee_id = emp_id, name=employee_name, jobrole=job_role,month_salary=salary, number_of_rows=number_of_rows)
+    return render_template('OutputEmployeeSystem.html', employee_id = emp_id, name=employee_name, jobrole=job_role,month_salary=salary, number_of_rows=number_of_rows, scientist_count = scientist_count, engineering_count = engineering_count, hr_count = hr_count, image_url = image_url)
 
 
 
