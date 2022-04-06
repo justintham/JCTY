@@ -27,6 +27,14 @@ table = 'employee'                                                          #NO 
 def home():
     return render_template('home.html')
 
+@app.route("/about", methods=['GET', 'POST'])
+def aboutus():
+     return render_template('AboutUs.html')
+
+@app.route("/contact", methods=['GET', 'POST'])
+def contactus():
+     return render_template('ContactUs.html')
+
 
 @app.route("/empDatabase", methods=['GET', 'POST'])
 def employeeDatabase():
