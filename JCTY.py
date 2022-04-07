@@ -51,13 +51,16 @@ def queryDatabase():
 
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
-    emp_id = request.form['emp_id']
+    emp_image_file = request.files['emp_image_file']
     employee_name = request.form['employee_name']
+    address = request.form['address']
+    email_address = request.form['email_address']
+    phone_number = request.form['phone_number']
+    emp_id = request.form['emp_id']
     job_role = request.form['job_role']
     salary = request.form['salary']
-    emp_image_file = request.files['emp_image_file']
 
-    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s)"
+    insert_sql = "INSERT INTO employee VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor = db_conn.cursor()
 
     if emp_image_file.filename == "":
@@ -65,7 +68,7 @@ def AddEmp():
 
     try:
 
-        cursor.execute(insert_sql, (emp_id, employee_name, job_role, salary))
+        cursor.execute(insert_sql, (employee_name, address, email_address, phone_number, emp_id, job_role, salary))
         db_conn.commit()
         # Uplaod image file in S3 #
         emp_image_file_name_in_s3 = "emp-id-" + str(emp_id) + ".png"
@@ -106,7 +109,6 @@ def AddEmp():
 
     print("all modification done...")
     return render_template('OutputEmployeeSystem.html', employee_id = emp_id, name=employee_name, jobrole=job_role,month_salary=salary, number_of_rows=number_of_rows, scientist_count = scientist_count, engineering_count = engineering_count, hr_count = hr_count, image_url = image_url)
-
 
 
 
