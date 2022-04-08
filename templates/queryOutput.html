@@ -46,20 +46,23 @@
 
 <center>
 	<div class="header">
-		<a href="{{ url_for('home') }}" class="logo">JCTY</a>
+		<a href="#default" class="logo">JCTY</a>
 		<div class="header-right">
 		  <a class="active" href="{{ url_for('home') }}">Home</a>
-		  <a href="{{ url_for('contactus') }}">Contact</a>
-		  <a href="{{ url_for('aboutus') }}">About</a>
+		  <a href="#contact">Contact</a>
+		  <a href="/about">About</a>
 		</div>
 	  </div>
 	<font color="RebeccaPurple" size="5" style="font-family: avenir">
 		<body bgcolor="lightgrey">
 			<h1 style="font-family: Rockwell">RETRIEVE SUCCESSFUL</h1><br>
 			<h2 style="font-family: Rockwell">Following is the employee data</h2>
-			<h2 style="font-family: Rockwell">Employee Id: {{ id }}</h2>
 			<h2 style="font-family: Rockwell">Employee Name: {{ name }}</h2>
-			<h2 style="font-family: Rockwell">Employee Role: {{ job_role }}</h2>
+			<h2 style="font-family: Rockwell">Employee Address: {{ address  }}</h2>
+			<h2 style="font-family: Rockwell">Employee Email Address: {{ email_address }}</h2>
+			<h2 style="font-family: Rockwell">Employee Phone Number: {{ phone_number }}</h2>
+			<h2 style="font-family: Rockwell">Employee Id: {{ emp_id }}</h2>
+			<h2 style="font-family: Rockwell">Employee Job Role: {{ job_role }}</h2>
 			<h2 style="font-family: Rockwell">Employee Salary: {{ salary }}</h2><br><br>
 
 
