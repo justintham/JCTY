@@ -1,8 +1,8 @@
-customhost = "employee.cenumlmfsqnw.us-east-1.rds.amazonaws.com"
+customhost = "employee.cjvcbowyawpi.us-east-1.rds.amazonaws.com"
 customuser = "aws_user"
-custompass = "Bait3273"
+custompass = "bait3273"
 customdb = "employee"
-custombucket = "tancheeonn-bucket"
+custombucket = "justinthamjiawei-employee"
 customregion = "us-east-1"
-cloudfront = "d2axm6kw0u8vqw.cloudfront.net"
+cloudfront = "dhtgw335jsua5.cloudfront.net"
 
